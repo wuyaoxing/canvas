@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    App Router
-    <p><router-link :to="item.path" v-for="item in routes" :key="item.name">{{item.name}}</router-link></p>
+    App
+    <p><router-link :to="item.path" v-for="item in routes" :key="item.name" v-if="item.name !== $route.name">{{item.name}}</router-link></p>
     <router-view></router-view>
   </div>
 </template>

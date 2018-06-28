@@ -41,8 +41,8 @@ export default {
       context.strokeStyle = this.color;
       context.lineWidth = this.num;
     },
-    paint(e, type) {
-      const { canvas, context, array_paint } = this;
+    paint() {
+      const { context, array_paint } = this;
       context.beginPath();
       context.moveTo(array_paint[0][0], array_paint[0][1]);
       if (array_paint.length == 1) {
