@@ -100,11 +100,88 @@ export default {
     clearAll() {
       this.clearCanvas();
       this.canvasImgPath = [];
+    },
+    draw() {
+      const { context } = this;
+
+      // const lgrd = context.createLinearGradient(100, 300, 700, 300);
+      // const rgrd = context.createRadialGradient(200,200,30,200,200,100)
+
+      // lgrd.addColorStop(0, "olive");
+      // lgrd.addColorStop(0.25, "maroon");
+      // lgrd.addColorStop(0.5, "aqua");
+      // lgrd.addColorStop(0.75, "fuchsia");
+      // lgrd.addColorStop(0.25, "teal");
+
+      // rgrd.addColorStop(0, "olive");
+      // rgrd.addColorStop(0.25, "maroon");
+      // rgrd.addColorStop(0.5, "aqua");
+      // rgrd.addColorStop(0.75, "fuchsia");
+      // rgrd.addColorStop(0.25, "teal");
+
+      // context.fillStyle = rgrd;
+      // context.strokeStyle = lgrd;
+
+      // context.strokeRect(200, 50, 300, 50);
+      // context.strokeRect(200, 150, 450, 50);
+
+      // context.fillRect(20, 200, 400, 20);
+      // context.fillRect(10,10,400,200)
+
+      context.arc(100, 100, 30, 0, Math.PI, true);
+      // for (var i = 1; i <= 4; i++) {
+      //   for (var j = 1; j <= 4; j++) {
+      //     this.drawRoundRect(
+      //       context,
+      //       200 + 16 * i + 80 * (i - 1),
+      //       100 + 16 * j + 80 * (j - 1),
+      //       80,
+      //       80,
+      //       5
+      //     );
+      //     context.fillStyle = "#CCBFB4";
+      //     context.strokeStyle = "#0078AA";
+      //     context.stroke();
+      //     context.fill();
+      //   }
+      // }
+      this.drawRoundRect(context, 100, 100, 200, 200, 50);
+      context.stroke();
+    },
+    drawRoundRect(context, x, y, width, height, radius) {
+      context.beginPath();
+      context.arc(x + radius, y + radius, radius, Math.PI, Math.PI * 3 / 2);
+      context.lineTo(width - radius + x, y);
+      context.arc(
+        width - radius + x,
+        radius + y,
+        radius,
+        Math.PI * 3 / 2,
+        Math.PI * 2
+      );
+      context.lineTo(width + x, height + y - radius);
+      context.arc(
+        width - radius + x,
+        height - radius + y,
+        radius,
+        0,
+        Math.PI * 1 / 2
+      );
+      context.lineTo(radius + x, height + y);
+      context.arc(
+        radius + x,
+        height - radius + y,
+        radius,
+        Math.PI * 1 / 2,
+        Math.PI
+      );
+      context.closePath();
     }
   },
   mounted() {
     this.$nextTick(() => {
       this.initCanvasStyle();
+      this.draw();
     });
   }
 };
