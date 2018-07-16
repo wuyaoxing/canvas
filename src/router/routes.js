@@ -1,5 +1,6 @@
 import canvasBrush from '@/components/canvas-brush'
 import canvasTest from '@/components/canvas-test'
+import canvasWave from '@/components/canvas-wave'
 
 export const canvasRoutes = [
     {
@@ -11,6 +12,11 @@ export const canvasRoutes = [
         name: 'canvasBrush',
         path: '/canvas/brush',
         component: canvasBrush
+    },
+    {
+        name: 'canvasWave',
+        path: '/canvas/wave',
+        component: canvasWave
     }
 ]
 
