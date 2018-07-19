@@ -5,9 +5,8 @@ function localeValue(val) {
 }
 
 export default class Devicelink extends Canvas {
-    constructor(canvas, options) {
-        super(canvas)
-        this.options = options
+    constructor() {
+        super(...arguments)
 
         this.stage = {
             width: 0,
@@ -32,16 +31,20 @@ export default class Devicelink extends Canvas {
 
         // 鼠标移动
         this.moveFlag = false
+        // 缩放
+        this.zoom = 1
     }
 
-    mouseDownEvent = event => {
+    mouseDownEvent = () => {
         this.moveFlag = true
+        this.canvas.style.cursor = 'move'
     }
-
-    mouseUpEvent = evnet => {
+    
+    mouseUpEvent = () => {
         this.moveFlag = false
+        this.canvas.style.cursor = 'pointer'
     }
-
+    
     mouseMoveEvent = event => {
         if(!this.moveFlag) return
         const { stage } = this
@@ -50,18 +53,51 @@ export default class Devicelink extends Canvas {
         stage.centerY += event.movementY
     }
 
-    mouseWheelEvent() {}
-
-    initMouseEvent() {
-        document.addEventListener('mousedown', this.mouseDownEvent, false)
-        document.addEventListener('mouseup', this.mouseUpEvent, false)
-        document.addEventListener('mousemove', this.mouseMoveEvent, false)
+    mouseOverEvent = () => {
+        this.canvas.style.cursor = 'pointer'
+    }
+    
+    mouseWheelEvent = event => {
+        const step = 0.05
+        const { canvas, zoom } = this
+        
+        // if(zoom < 0.5 || zoom > 1.5) return
+        
+        if(event.wheelDelta > 0) {
+            if(zoom < 1.5) {
+                // 鼠标滚轮放大
+                this.zoom += step
+            } 
+        }else {
+            if(zoom > 0.5) {
+                // 鼠标滚轮缩小
+                this.zoom -= step
+            }
+        }
+        canvas.style.transform = `scale(${zoom})`
+        // this.zoomDraw()
+        // this.ctx.scale(zoom, zoom)
+        
+        // this.ctx.translate((canvas.width - canvas.width * zoom) / 2, (canvas.height - canvas.height * zoom) / 2)
+        console.log(zoom, event)
     }
 
+    initMouseEvent() {
+        const { canvas } = this
+        canvas.addEventListener('mousedown', this.mouseDownEvent, false)
+        canvas.addEventListener('mousemove', this.mouseMoveEvent, false)
+        document.addEventListener('mouseup', this.mouseUpEvent, false)
+        canvas.addEventListener('mousewheel', this.mouseWheelEvent, false)
+        canvas.addEventListener('mouseover', this.mouseOverEvent, false)
+    }
+    
     destroyMouseEvent() {
-        document.removeEventListener('mousedown', this.mouseDownEvent, false)
+        const { canvas } = this
+        canvas.removeEventListener('mousedown', this.mouseDownEvent, false)
+        canvas.removeEventListener('mousemove', this.mouseMoveEvent, false)
         document.removeEventListener('mouseup', this.mouseUpEvent, false)
-        document.removeEventListener('mousemove', this.mouseMoveEvent, false)
+        canvas.removeEventListener('mousewheel', this.mouseWheelEvent, false)
+        canvas.removeEventListener('mouseover', this.mouseOverEvent, false)
     }
 
     drawImage() {
@@ -118,6 +154,25 @@ export default class Devicelink extends Canvas {
         this.drawCentralServer(this.stage.centerX, this.stage.centerY)
         // this.drawImage()
     }
+    
+    zoomDraw() {
+        const { canvas, ctx, zoom } = this
+        
+        const img = new Image()
+        img.src = canvas.toDataURL('image/png')
+
+        
+        const width = Math.floor(canvas.width * zoom)
+        const height = Math.floor(canvas.height * zoom)
+        const x = (canvas.width - width) / 2
+        const y = (canvas.height - height) / 2
+        console.log(canvas, img, x, y, width, height)
+        
+        this.clearCanvas()
+        img.onload = () => {
+            ctx.drawImage(img, x, y, width, height)
+        }
+    }
 
     initIcon() {
         const images = {
@@ -135,16 +190,17 @@ export default class Devicelink extends Canvas {
     }
 
     initStage() {
-        const { canvas, stage, options } = this
+        const { stage, options } = this
         stage.width = options.width
         stage.height = options.height
         stage.centerX = stage.width / 2
         stage.centerY = stage.height / 2
-        canvas.width = stage.width
-        canvas.height = stage.height
     }
 
     init() {
+        // 初始化canvas
+        this.initCanvas()
+
         // 加载图片icon
         this.initIcon()
 

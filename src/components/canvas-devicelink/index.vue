@@ -17,7 +17,7 @@ export default {
     init() {
       const canvas = this.$refs.canvas;
       const { clientWidth, clientHeight } = this.$el;
-      canvas.style.background = "#fff";
+      canvas.style.background = "#ddd";
       canvas.style.border = "1px solid #333";
 
       this.Devicelink = new Devicelink(canvas, {
@@ -40,6 +40,7 @@ export default {
 <style>
 .canvas-devicelink {
     flex: 1;
+    overflow: hidden;
 }
 </style>
 
